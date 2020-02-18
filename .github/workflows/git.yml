@@ -16,7 +16,8 @@ jobs:
       run: git describe --tags `git rev-list --tags --max-count=1`
 
     - name: Get branch for SHA
-      run: git name-rev ${{ github.sha }}
+      run: git name-rev --name-only --exclude=tags/* ${{ github.sha }}
+
   # shellops:
   #   runs-on: ubuntu-latest
   #   steps:
