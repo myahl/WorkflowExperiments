@@ -18,27 +18,16 @@ jobs:
     - name: Get branch for SHA
       run: git name-rev --name-only --exclude=tags/* ${{ github.sha }}
 
-  # shellops:
-  #   runs-on: ubuntu-latest
-  #   steps:
+    - name: Set variables
+      id: vars
+      shell: bash
+      run: |
+        branch=$(git name-rev --name-only --exclude=tags/* ${{ github.sha }})
+        image=$(echo docker.pkg.github.com/${{ github.repository }}/$branch | tr '[:upper:]' '[:lower:]')
+        echo "::set-output name=branch::$branch"
+        echo "::set-output name=image::$image"
 
-  #   - shell: bash
-  #     run: echo $GITHUB_REF
-
-  #   - shell: bash
-  #     run: echo ${GITHUB_REF:10}
-
-  #   - shell: bash
-  #     run: echo ${GITHUB_REF#refs/*/}
-
-  #   - name: Extract Branch Name
-  #     id: extract-branch
-  #     shell: bash
-  #     run: echo "::set-output name=branch::${GITHUB_REF#refs/*/}"
-
-  #   - name:  ${{ github.repository }}
-  #     id: lower
-  #     shell: bash
-  #     run: |
-  #       echo "docker.pkg.github.com/${{ github.repository }}/${GITHUB_REF#refs/*/}" | tr '[:upper:]' '[:lower:]'
-  #       echo "::set-output name=branch::docker.pkg.github.com/${{ github.repository }}/${GITHUB_REF#refs/*/}"
+    - name: Echo vars
+      run: |
+        echo ${{ steps.vars.outputs.branch }}
+        echo ${{ steps.vars.outputs.image }}
