@@ -20,6 +20,16 @@ jobs:
 
     - name: 'Checkout'
       uses: 'actions/checkout@v2'
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: List tags
+      run: git tag
+
+    - name: Get latest tag
+      run: git describe --tags `git rev-list --tags --max-count=1`
+
+    - name: Get branch for SHA
+      run: git name-rev --name-only --exclude=tags/* ${{ github.sha }}
 
     - name: Set variables
       id: vars
