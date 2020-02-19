@@ -7,7 +7,6 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_DEPLOYMENT_REF: ${{ github.event.deployment.ref }}
   GITHUB_DEPLOYMENT_SHA: ${{ github.event.deployment.sha }}
-  GITHUB_DEPLOYMENT_PAYLOAD: ${{ github.event.deployment.payload }}
 
 jobs:
   deployment:
@@ -24,7 +23,7 @@ jobs:
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
     - name: Show payload
-      run: echo $GITHUB_DEPLOYMENT_PAYLOAD
+      run: echo ${{ github.event.deployment.payload }}
 
     - name: Set variables
       id: vars
