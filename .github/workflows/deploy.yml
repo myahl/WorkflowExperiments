@@ -7,6 +7,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_DEPLOYMENT_REF: ${{ github.event.deployment.ref }}
   GITHUB_DEPLOYMENT_SHA: ${{ github.event.deployment.sha }}
+  GITHUB_DEPLOYMENT_PAYLOAD: ${{ github.event.deployment.payload }}
 
 jobs:
   deployment:
@@ -20,16 +21,10 @@ jobs:
 
     - name: 'Checkout'
       uses: 'actions/checkout@v2'
-    - run: git fetch --prune --unshallow
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-    - name: List tags
-      run: git tag
-
-    - name: Get latest tag
-      run: git describe --tags `git rev-list --tags --max-count=1`
-
-    - name: Get branch for SHA
-      run: git name-rev --name-only --exclude=tags/* ${{ github.sha }}
+    - name: Show payload
+      run: echo $GITHUB_DEPLOYMENT_PAYLOAD
 
     - name: Set variables
       id: vars

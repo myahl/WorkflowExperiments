@@ -9,3 +9,5 @@ staging:
 
 development:
   environment: development
+  payload:
+    branch: master
