@@ -1,0 +1,50 @@
+name: 'Deploy'
+on: ['deployment']
+env:
+  APPLICATION_NAME: murquri   #lowercase only
+  ENVIRONMENT_NAME: ${{ github.event.deployment.environment }}
+  GITHUB_REF: ${{ github.ref }}
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_DEPLOYMENT_REF: ${{ github.event.deployment.ref }}
+  GITHUB_DEPLOYMENT_SHA: ${{ github.event.deployment.sha }}
+
+jobs:
+  deployment:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - name: Update Deliverybot Status - Pending
+      uses: deliverybot/deployment-status@v1.1.1
+      with:
+        state: 'pending'
+        token: '${{ github.token }}'
+
+    - name: 'Checkout'
+      uses: 'actions/checkout@v2'
+
+    - name: Set variables
+      id: vars
+      shell: bash
+      run: |
+        branch=$(git name-rev --name-only --exclude=tags/* ${{ github.sha }})
+        image=$(echo docker.pkg.github.com/${{ github.repository }}/$branch | tr '[:upper:]' '[:lower:]')
+        echo "::set-output name=branch::$branch"
+        echo "::set-output name=docker-image::$image"
+
+    - name: Echo vars
+      run: |
+        echo ${{ steps.vars.outputs.branch }}
+        echo ${{ steps.vars.outputs.docker-image }}
+
+    - name: Update Deliverybot Status - Success
+      if: success()
+      uses: 'deliverybot/deployment-status@v1.1.1'
+      with:
+        state: 'success'
+        token: '${{ github.token }}'
+
+    - name: Update Deliverybot Status - Failure
+      if: failure()
+      uses: 'deliverybot/deployment-status@v1.1.1'
+      with:
+        state: 'failure'
+        token: '${{ github.token }}'
