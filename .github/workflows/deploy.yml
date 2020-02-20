@@ -15,6 +15,10 @@ jobs:
       uses: 'actions/checkout@v2'
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
+    - name: Payload Info
+      id: payload
+      uses: Dovyski/payload-info-action@v1
+
     - name: Set variables
       uses: actions/github-script@0.5.0
       id: vars
@@ -22,11 +26,13 @@ jobs:
         script: |
           const branch = context.payload.deployment.payload.branch;
           const version = context.payload.deployment.payload.version;
-          return {"branch": branch, "version": version};
+          return context.payload.deployment.payload;
 
     - name: Echo vars
       run: |
         echo ${{ steps.vars.outputs.result }}
+        echo ${{ steps.payload.outputs.value }}
+        echo ${{ steps.payload.outputs.branch }}
 
     - name: Update Deliverybot Status - Success
       if: success()
