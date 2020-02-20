@@ -21,12 +21,13 @@ jobs:
       with:
         script: |
           const branch = context.payload.deployment.payload.branch;
-          const imageRepo = 'docker.pkg.github.com/${{ github.repository }}';
-          return branch;
+          const version = context.payload.deployment.payload.version;
+          return {"branch": branch, "version": version};
 
     - name: Echo vars
       run: |
-        echo ${{ steps.vars.outputs.result }}
+        echo ${{ steps.vars.outputs.result.branch }}
+        echo ${{ steps.vars.outputs.result.version }}
 
     - name: Update Deliverybot Status - Success
       if: success()

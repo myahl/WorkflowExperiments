@@ -11,3 +11,4 @@ development:
   environment: development
   payload:
     branch: master
+    version: 0.0.1
