@@ -17,7 +17,7 @@ jobs:
 
     - name: Payload Info
       id: payload
-      uses: Dovyski/payload-info-action@v1
+      uses: myahl/payload-info-action@master
 
     - name: Set variables
       uses: actions/github-script@0.5.0
