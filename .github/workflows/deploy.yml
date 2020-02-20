@@ -22,11 +22,11 @@ jobs:
         script: |
           const branch = context.payload.deployment.payload.branch;
           const imageRepo = 'docker.pkg.github.com/${{ github.repository }}';
-          core.setOutput('branch', branch);
+          return branch;
 
     - name: Echo vars
       run: |
-        echo ${{ steps.vars.outputs.branch }}
+        echo ${{ steps.vars.outputs.result }}
 
     - name: Update Deliverybot Status - Success
       if: success()
