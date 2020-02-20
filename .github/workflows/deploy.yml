@@ -26,8 +26,7 @@ jobs:
 
     - name: Echo vars
       run: |
-        echo ${{ steps.vars.outputs.result.branch }}
-        echo ${{ steps.vars.outputs.result.version }}
+        echo ${{ steps.vars.outputs.result }}
 
     - name: Update Deliverybot Status - Success
       if: success()
