@@ -1,12 +1,5 @@
 name: 'Deploy'
 on: ['deployment']
-env:
-  APPLICATION_NAME: murquri   #lowercase only
-  ENVIRONMENT_NAME: ${{ github.event.deployment.environment }}
-  GITHUB_REF: ${{ github.ref }}
-  GITHUB_SHA: ${{ github.sha }}
-  GITHUB_DEPLOYMENT_REF: ${{ github.event.deployment.ref }}
-  GITHUB_DEPLOYMENT_SHA: ${{ github.event.deployment.sha }}
 
 jobs:
   deployment:
@@ -22,25 +15,18 @@ jobs:
       uses: 'actions/checkout@v2'
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-    - uses: actions/github-script@0.5.0
+    - name: Set variables
+      uses: actions/github-script@0.5.0
+      id: vars
       with:
         script: |
-          console.log(context.payload.deployment.payload);
-          console.log(github.deployment.payload);
-
-    - name: Set variables
-      id: vars
-      shell: bash
-      run: |
-        branch=$(git name-rev --name-only --exclude=tags/* ${{ github.sha }})
-        image=$(echo docker.pkg.github.com/${{ github.repository }}/$branch | tr '[:upper:]' '[:lower:]')
-        echo "::set-output name=branch::$branch"
-        echo "::set-output name=docker-image::$image"
+          const branch = context.payload.deployment.payload.branch;
+          const imageRepo = 'docker.pkg.github.com/${{ github.repository }}';
+          core.setOutput('branch', branch);
 
     - name: Echo vars
       run: |
         echo ${{ steps.vars.outputs.branch }}
-        echo ${{ steps.vars.outputs.docker-image }}
 
     - name: Update Deliverybot Status - Success
       if: success()
