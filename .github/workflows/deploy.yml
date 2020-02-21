@@ -39,7 +39,7 @@ jobs:
       run: |
         echo branch = ${{ steps.vars.outputs.branch }}
         echo environment = ${{ steps.vars.outputs.environment }}
-        echo deploymentId = ${{ steps.vars.outputs.deploymentId }}
+        echo deployment-id = ${{ steps.vars.outputs.deployment-id }}
 
     - name: Update Deliverybot Status - Success
       if: success()
