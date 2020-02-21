@@ -11,10 +11,10 @@ development:
   environment: development
   payload:
     branch: master
-    version: '0.0.1'
+    version: 0.0.1
 
 github-test:
-  environment: test
+  environment: development
   payload:
     branch: master
-    version: '0.0.1'
+    version: 0.0.1
