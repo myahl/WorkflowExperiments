@@ -15,16 +15,25 @@ jobs:
       uses: 'actions/checkout@v2'
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-    - name: Set variables
+    - name: Get deployment event
       uses: actions/github-script@0.5.0
-      id: vars
+      id: script
       with:
         script: |
-          return context.payload.deployment.payload;
+          return context.payload.deployment;
 
-    - name: Echo json
+    - name: Set variables
+      id: vars
+      shell: bash
+      env:
+        deployment: ${{ steps.script.outputs.result }}
       run: |
-        echo '${{ steps.vars.outputs.result }}' | jq '.'
+        branch=$(echo '$deployment' | jq '.payload.branch')
+        environment=$(echo '$deployment' | jq '.payload.target')
+        deploymentId=$(echo '$deployment' | jq '.id')
+        echo "::set-output name=branch::$branch"
+        echo "::set-output name=environment::$environment"
+        echo "::set-output name=deployment-id::$deploymentId"
         
     - name: Update Deliverybot Status - Success
       if: success()

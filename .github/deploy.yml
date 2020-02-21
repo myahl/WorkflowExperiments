@@ -12,3 +12,9 @@ development:
   payload:
     branch: master
     version: 0.0.1
+
+github-test:
+  environment: github-test
+  payload:
+    branch: master
+    version: 0.0.1
