@@ -15,25 +15,17 @@ jobs:
       uses: 'actions/checkout@v2'
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-    - name: Payload Info
-      id: payload
-      uses: myahl/payload-info-action@master
-
     - name: Set variables
       uses: actions/github-script@0.5.0
       id: vars
       with:
         script: |
-          const branch = context.payload.deployment.payload.branch;
-          const version = context.payload.deployment.payload.version;
           return context.payload.deployment.payload;
 
-    - name: Echo vars
+    - name: Echo json
       run: |
-        echo ${{ steps.vars.outputs.result }}
-        echo ${{ steps.payload.outputs.value }}
-        echo ${{ steps.payload.outputs.branch }}
-
+        echo "${{ steps.vars.outputs.result }}" | jq '.'
+        
     - name: Update Deliverybot Status - Success
       if: success()
       uses: 'deliverybot/deployment-status@v1.1.1'
