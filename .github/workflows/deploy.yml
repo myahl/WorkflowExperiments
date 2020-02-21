@@ -34,7 +34,13 @@ jobs:
         echo "::set-output name=branch::$branch"
         echo "::set-output name=environment::$environment"
         echo "::set-output name=deployment-id::$deploymentId"
-        
+
+    - name: Echo variables
+      run: |
+        echo branch = ${{ steps.vars.outputs.branch }}
+        echo environment = ${{ steps.vars.outputs.environment }}
+        echo deploymentId = ${{ steps.vars.outputs.deploymentId }}
+
     - name: Update Deliverybot Status - Success
       if: success()
       uses: 'deliverybot/deployment-status@v1.1.1'
