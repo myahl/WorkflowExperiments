@@ -26,7 +26,7 @@ jobs:
       id: vars
       shell: bash
       env:
-        deployment: ${{ steps.script.outputs.result }}
+        deployment: '${{ steps.script.outputs.result }}'
       run: |
         branch=$(echo '$deployment' | jq '.payload.branch')
         environment=$(echo '$deployment' | jq '.payload.target')
