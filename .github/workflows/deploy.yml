@@ -24,7 +24,7 @@ jobs:
 
     - name: Echo json
       run: |
-        echo "${{ steps.vars.outputs.result }}" | jq '.'
+        echo '${{ steps.vars.outputs.result }}' | jq '.'
         
     - name: Update Deliverybot Status - Success
       if: success()
